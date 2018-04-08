@@ -1,6 +1,8 @@
 #ifndef SELLER_H
 #define SELLER_H
 
+#define TIME_TO_SELL 60
+
 #define HIGH_TIME_MAX 2
 #define HIGH_TIME_LOW 1
 #define MEDIUM_TIME_MAX 4
@@ -13,11 +15,14 @@
 enum SellerTypes {HIGH, MEDIUM, LOW};
 
 class Seller {
-    int type, nextTicket, currentSaleTime, custInHour, numSold;
+    int type, nextTicket, currentSaleTime, custInHour, numSold, sellerNum;
+    int minutesSpent;
     std::queue<Customer> queue;
+    std::vector<int> custThisTime;
     // The seller doesn't have to worry about deleting tickets when the program
     // is over
     Ticket **tickets;
+    bool stillSelling;
 
     /* Spend part of a  minute selling a ticket
      * If no sale is in progress right now, the seller will sell to the next 
@@ -32,9 +37,15 @@ class Seller {
      * @retval whether or not the sale went through
      */
     bool finializeSale();
+
+    /* Randomly selects custInHour number of times during a 60 minute period to
+     * have customers enter the queue
+     * Initializes custThisTime
+     */
+    void generateTimeCustomersCome();
 public:
 
-    Seller(int sellerType, int firstSeatToSell, int custInHour);
+    Seller(int sellerType, int sellerNum, int firstSeatToSell, int custInHour, Ticket **tickets);
 
     /* adds customers to the queue and calls sellTicket()
      */

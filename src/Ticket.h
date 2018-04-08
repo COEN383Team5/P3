@@ -2,14 +2,17 @@
 #define TICKET_H
 
 #define DEFAULT_LABEL "----"
+#define MAX_TICKET_SALES 100
 
 #include <string>
+#include <mustex>
 
 class Ticket {
-    static int lastIDUsed = 0;
+    static int lastIDUsed;
+    static std::mutex mut;
     std::string label;
     int seat;
-    bool sold;
+    volatile bool sold;
 
 public:
 
@@ -24,7 +27,7 @@ public:
      *      this determines the label
      * @retval whether or not the sale could be completed     
      */
-    bool sellTicket(int sellerType, int saleCount);
+    bool sellTicket(int sellerType, int sellerNum, int saleCount);
 };
 
 #endif 
