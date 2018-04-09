@@ -1,30 +1,63 @@
 #include <cstdio>
+#include "Log.h"
 #include "Ticket.h"
 
-int Ticket::lastIDUsed;
 std::mutex Ticket::mut;
 
 Ticket::Ticket() {
     label = std::string(DEFAULT_LABEL);
-    seat = lastIDUsed++;
+    seat = 0;
+    sold = false;
+}
+
+Ticket::Ticket(const int &seat) {
+    label = std::string(DEFAULT_LABEL);
+    this->seat = seat;
     sold = false;
 } 
 
-bool Ticket::sellTicket(int sellerType, int sellerNum, int saleCount) {
+Ticket::Ticket(const Ticket &other) {
+    if(this == &other) {
+        return;
+    }
+    *this = other;
+}
+
+Ticket &Ticket::operator=(const Ticket &other) {
+    if(this == &other) {
+        return *this;
+    }
+    label = other.label;
+    seat = other.seat;
+    sold = other.sold;
+    return *this;
+}
+
+Ticket::~Ticket() {
+
+}
+
+bool Ticket::sellTicket(const std::string &sellerLabel, const int &saleCount, const int &minutesSpent) {
+    char s[5];
+    std::unique_lock<std::mutex> lock(mut);
     if(sold) {
         return false;
     }
-    char s[5];
-    std::unique_lock<std::mutex> lock(mut);
     sold = true;
-    if(sellerType == HIGH) {
-        sprintf(s, "H%d%02d", sellerNum, saleCount); 
-        label = std::string(s);
-    } else if(sellerType == MEDIUM) {
-        sprintf(s, "M%d%02d", sellerNum, saleCount); 
-    } else {
-        sprintf(s, "L%d%02d", sellerNum, saleCount); 
-    }
+    sprintf(s, "%s%02d", sellerLabel.c_str(), saleCount); 
     label = std::string(s);
+    Log::logSale(seat, sellerLabel, minutesSpent);
+    return true;
+}
 
+int Ticket::getSeat() {
+    return seat;
+}
+
+std::string Ticket::getLabel() {
+    return label;
+}
+
+bool Ticket::isSold() {
+    return sold;
 }

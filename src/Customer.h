@@ -3,7 +3,7 @@
 
 struct Customer {
     int id;
-    Ticket *ticket;
+    int seat;
 }; 
 
 #endif

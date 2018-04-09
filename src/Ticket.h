@@ -5,10 +5,9 @@
 #define MAX_TICKET_SALES 100
 
 #include <string>
-#include <mustex>
+#include <mutex>
 
 class Ticket {
-    static int lastIDUsed;
     static std::mutex mut;
     std::string label;
     int seat;
@@ -17,6 +16,10 @@ class Ticket {
 public:
 
     Ticket(); 
+    Ticket(const int &seat);
+    Ticket(const Ticket &other);
+    Ticket &operator=(const Ticket &other);
+    ~Ticket();
 
     /* Sells the ticket if it is still available
      * thread-safe
@@ -27,7 +30,19 @@ public:
      *      this determines the label
      * @retval whether or not the sale could be completed     
      */
-    bool sellTicket(int sellerType, int sellerNum, int saleCount);
+    bool sellTicket(const std::string &sellerLabel, const int &saleCount, const int &minutesSpent);
+
+    /* returns seat
+     */
+    int getSeat();
+
+    /* returns label
+     */
+    std::string getLabel();
+
+    /* returns sold
+     */
+    bool isSold();
 };
 
 #endif 
