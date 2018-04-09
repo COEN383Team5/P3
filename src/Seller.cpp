@@ -18,7 +18,6 @@ void Seller::setNextTicket() {
         int i = nextTicket+1;
         while(true) {
             if(i%10 == 0) {
-                fprintf(stderr, "i=%d\n", i);
                 if(i == 70) {
                     i = 40;
                 } else if(i == 50) {
@@ -37,10 +36,10 @@ void Seller::setNextTicket() {
                     nextTicket = MAX_TICKET_SALES+1;
                     return;
                 } 
-                if(!(*tickets)[i].isSold()) {
-                    nextTicket = i;
-                    return;
-                }
+            }
+            if(!(*tickets)[i].isSold()) {
+                nextTicket = i;
+                return;
             }
             i++;
         }
@@ -92,13 +91,21 @@ bool Seller::finializeSale() {
 }
 
 void Seller::generateTimeCustomersCome() {
+    int timeMax = 0;
+    if(type == HIGH) {
+        timeMax = HIGH_TIME_MAX;
+    } else if(type == MEDIUM) {
+        timeMax = MEDIUM_TIME_MAX;
+    } else { 
+        timeMax = LOW_TIME_MAX;
+    }
     custThisTime = std::vector<int>(TIME_TO_SELL);
     for(int i = 0; i < TIME_TO_SELL; i++) {
         custThisTime[i] = 0;
     }
     int minutesWithCusts[custInHour]; 
     for(int i = 0; i < custInHour; i++) {
-        minutesWithCusts[i] = rand()%TIME_TO_SELL;
+        minutesWithCusts[i] = rand()%(TIME_TO_SELL-timeMax);
     }
     for(int i = 0; i < custInHour; i++) {
         custThisTime[minutesWithCusts[i]]++;

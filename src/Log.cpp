@@ -5,9 +5,10 @@ std::mutex Log::stdoutMut;
 
 void Log::printTickets(Ticket **tickets) {
     std::unique_lock<std::mutex> lock(stdoutMut);
+    int index = 0;
     for(int j = 0; j< 10; j++) {
         for(int i = 0; i < 10; i++) {
-            std::cout << (*tickets)[i+j].getLabel() << " ";
+            std::cout << (*tickets)[index++].getLabel() << " ";
         }   
         std::cout << std::endl;
     }   
