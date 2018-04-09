@@ -10,33 +10,6 @@ Ticket::Ticket() {
     sold = false;
 }
 
-Ticket::Ticket(const int &seat) {
-    label = std::string(DEFAULT_LABEL);
-    this->seat = seat;
-    sold = false;
-} 
-
-Ticket::Ticket(const Ticket &other) {
-    if(this == &other) {
-        return;
-    }
-    *this = other;
-}
-
-Ticket &Ticket::operator=(const Ticket &other) {
-    if(this == &other) {
-        return *this;
-    }
-    label = other.label;
-    seat = other.seat;
-    sold = other.sold;
-    return *this;
-}
-
-Ticket::~Ticket() {
-
-}
-
 bool Ticket::sellTicket(const std::string &sellerLabel, const int &saleCount, const int &minutesSpent) {
     char s[5];
     std::unique_lock<std::mutex> lock(mut);

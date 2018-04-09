@@ -81,12 +81,12 @@ bool Seller::sellTicket() {
 
 bool Seller::finializeSale() {
     while(!(*tickets)[nextTicket].sellTicket(label, numSold, minutesSpent)) {
-        numSold++;
         setNextTicket();
         if(nextTicket >= MAX_TICKET_SALES) {
             return false;
         }
     }
+    numSold++;
     return true;
 }
 
@@ -105,7 +105,7 @@ void Seller::generateTimeCustomersCome() {
     }
     int minutesWithCusts[custInHour]; 
     for(int i = 0; i < custInHour; i++) {
-        minutesWithCusts[i] = rand()%(TIME_TO_SELL-timeMax);
+        minutesWithCusts[i] = rand()%(TIME_TO_SELL-timeMax-1);
     }
     for(int i = 0; i < custInHour; i++) {
         custThisTime[minutesWithCusts[i]]++;
@@ -146,36 +146,6 @@ Seller::Seller(int type, int sellerNum, int firstSeatToSell, int custInHour, Tic
     stillSelling = true;
     minutesSpent = 0;
     generateTimeCustomersCome();
-}
-
-Seller::Seller(const Seller &other) {
-    if(this == &other) {
-        return;   
-    }
-    *this = other;
-}
-
-Seller &Seller::operator=(const Seller &other) {
-    if(this == &other) {
-        return *this;
-    }
-    type = other.type;
-    nextTicket = other.nextTicket;
-    currentSaleTime = other.currentSaleTime;
-    custInHour = other.custInHour;
-    numSold = other.numSold;
-    sellerNum = other.sellerNum;
-    minutesSpent = other.minutesSpent;
-    queue = std::queue<Customer>(other.queue);
-    custThisTime = std::vector<int>(other.custThisTime);
-    label = std::string(other.label);
-    tickets = other.tickets;
-    stillSelling = other.stillSelling;
-    return *this;
-}
-
-Seller::~Seller() {
-    // tickets is clean up by whoever provided it to this function
 }
 
 bool Seller::spendMinute() {

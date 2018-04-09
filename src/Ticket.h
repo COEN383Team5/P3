@@ -17,9 +17,6 @@ public:
 
     Ticket(); 
     Ticket(const int &seat);
-    Ticket(const Ticket &other);
-    Ticket &operator=(const Ticket &other);
-    ~Ticket();
 
     /* Sells the ticket if it is still available
      * thread-safe

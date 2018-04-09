@@ -56,9 +56,6 @@ public:
 
     Seller();
     Seller(int sellerType, int sellerNum, int firstSeatToSell, int custInHour, Ticket **tickets);
-    Seller(const Seller &other);
-    Seller &operator=(const Seller &other);
-    ~Seller();
 
     /* adds customers to the queue and calls sellTicket()
      * @retval whether or not a sale was made by this seller in this minute

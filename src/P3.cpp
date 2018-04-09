@@ -63,7 +63,6 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < NUM_SELLERS; i++) {
         sThreads[i].join();
     }
-    Log::printTickets(&tickets);
     delete[] tickets;
     delete[] sellers;
 }
