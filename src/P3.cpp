@@ -44,11 +44,12 @@ int parseArguments(const int &argc, char *argv[]) {
     return retval;
 }
 
-void sellerThread(Seller *seller, Ticket **tickets) {
+void sellerThread(Seller *seller, Ticket **tickets, Barrier *barrier) {
     for(int i = 0; i < TIME_TO_SELL; i++) {
         if(seller->spendMinute()) {
             Log::printTickets(tickets);
         }   
+        barrier->lockOrNotify();
     }
 }
 
@@ -56,9 +57,10 @@ int main(int argc, char *argv[]) {
     int custInHour = parseArguments(argc, argv);
     Ticket *tickets = makeTickets();
     Seller *sellers = makeSellers(custInHour, &tickets);   
+    Barrier barrier(NUM_SELLERS);
     std::thread sThreads[NUM_SELLERS];
     for(int i = 0; i < NUM_SELLERS; i++) {
-        sThreads[i] = std::thread(sellerThread, &sellers[i], &tickets);
+        sThreads[i] = std::thread(sellerThread, &sellers[i], &tickets, &barrier);
     }
     for(int i = 0; i < NUM_SELLERS; i++) {
         sThreads[i].join();
