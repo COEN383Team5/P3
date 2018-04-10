@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "Ticket.h"
 #include "Seller.h"
+#include "Barrier.h"
 
 #define HIGH_SELLERS 1
 #define MEDIUM_SELLERS 3

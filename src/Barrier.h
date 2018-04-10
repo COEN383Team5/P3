@@ -8,6 +8,7 @@ class Barrier {
 	std::mutex *muts, mutsMut;
 	std::condition_variable cv;
 	int numMuts;
+    bool locked;
 
 public:
 	Barrier();
@@ -21,6 +22,6 @@ public:
 	 * waiting
 	 */
 	void lockOrNotify();
-}
+};
 
 #endif
