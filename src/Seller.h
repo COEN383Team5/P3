@@ -1,6 +1,9 @@
 #ifndef SELLER_H
 #define SELLER_H
 
+/* A class to act as a ticket seller to a customer
+ */
+
 #include <queue>
 #include <string>
 #include "Ticket.h"
@@ -28,7 +31,7 @@ class Seller {
     Ticket **tickets;
     bool stillSelling;
 
-    /* sets nextTicket depending on the type  of the seller
+    /* sets nextTicket depending on the type of the seller
      */
     void setNextTicket();
 
@@ -70,6 +73,9 @@ public:
      */
     int getMinutesSpent() const;
 
+    /* Turns away all customers in the queue
+     */
+    void closeUpShop();
 };
 
 #endif

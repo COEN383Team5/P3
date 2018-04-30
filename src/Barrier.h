@@ -1,6 +1,11 @@
 #ifndef BARRIER_H
 #define BARRIER_H
 
+/* This class implements a barrier, which is a mechanism to force a thread to 
+ * wait until all the other threads in a set of threads have reached a certain 
+ * point.
+ */
+
 #include <mutex>
 #include <condition_variable>
 

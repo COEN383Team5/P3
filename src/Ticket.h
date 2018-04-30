@@ -1,6 +1,8 @@
 #ifndef TICKET_H
 #define TICKET_H
 
+// This class ensures thread safe purchasing of tickets
+
 #define DEFAULT_LABEL "----"
 #define MAX_TICKET_SALES 100
 

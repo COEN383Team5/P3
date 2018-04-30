@@ -15,6 +15,8 @@ void Seller::setNextTicket() {
         nextTicket = MAX_TICKET_SALES;
         return;
     } else if(type == MEDIUM) {
+        // medium sellers don't make much sense on how they sell tickets
+        // see the project description for justification of this code
         int i = nextTicket+1;
         while(true) {
             if(i%10 == 0) {
@@ -69,6 +71,10 @@ bool Seller::sellTicket() {
         highSaleTime = LOW_TIME_MAX;
     }
     if(currentSaleTime == highSaleTime || (currentSaleTime >= lowSaleTime && rand()%2 == 0)) {
+        /* if it is a valid time to make a sale given the sellers type, there is a
+         * 50% chance of completing the sale. The sale completes if the maximum
+         * time has been reached
+         */
         if(finializeSale() == false) {
             stillSelling = false;
         } else {
@@ -91,21 +97,13 @@ bool Seller::finializeSale() {
 }
 
 void Seller::generateTimeCustomersCome() {
-    int timeMax = 0;
-    if(type == HIGH) {
-        timeMax = HIGH_TIME_MAX;
-    } else if(type == MEDIUM) {
-        timeMax = MEDIUM_TIME_MAX;
-    } else { 
-        timeMax = LOW_TIME_MAX;
-    }
     custThisTime = std::vector<int>(TIME_TO_SELL);
     for(int i = 0; i < TIME_TO_SELL; i++) {
         custThisTime[i] = 0;
     }
     int minutesWithCusts[custInHour]; 
     for(int i = 0; i < custInHour; i++) {
-        minutesWithCusts[i] = rand()%(TIME_TO_SELL-timeMax-1);
+        minutesWithCusts[i] = rand()%TIME_TO_SELL;
     }
     for(int i = 0; i < custInHour; i++) {
         custThisTime[minutesWithCusts[i]]++;
@@ -152,6 +150,7 @@ bool Seller::spendMinute() {
     bool sale = false;
     if(stillSelling) {
         for(int i = 0; i < custThisTime[minutesSpent]; i++) {
+            // add the number of customers that arrive this minute to the queue
             Customer cust = Customer();
             queue.push(cust);
             Log::logEntry(cust, *this);
@@ -179,4 +178,12 @@ std::string Seller::getLabel() const{
 
 int Seller::getMinutesSpent() const {
     return minutesSpent;
+}
+
+void Seller::closeUpShop() {
+    while(!queue.empty()) {
+        Customer cust = queue.front();
+        Log::logExit(cust, *this);
+        queue.pop();
+    }
 }

@@ -39,7 +39,9 @@ Seller *makeSellers(const int &custInHour, Ticket **tickets) {
 int parseArguments(const int &argc, char *argv[]) {
     int retval;
     if(argc != 2 || (retval = atoi(argv[1])) == 0) {
-        std::cerr << "Improper args\n";
+        std::cerr << "Improper args. Usage:\n\t" << argv[0] << " numCustInHour" 
+            << "\nWhere numCustInHour is the number of customers that will enter"
+            << " each seller's queue in 60 minutes.\n";
         exit(-1);
     }
     return retval;
@@ -52,6 +54,7 @@ void sellerThread(Seller *seller, Ticket **tickets, Barrier *barrier) {
         }   
         barrier->lockOrNotify();
     }
+    seller->closeUpShop();
 }
 
 int main(int argc, char *argv[]) {

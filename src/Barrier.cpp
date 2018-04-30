@@ -30,13 +30,7 @@ Barrier &Barrier::operator=(const Barrier &other) {
 	numMuts = other.numMuts;
 	muts = new std::mutex[numMuts];
     locked = other.locked;
-/*	mutexes can't be copied
- *	for(int i = 0; i < numMuts; i++) {
- *		muts[i] = other.muts[i];
- *	}
- *	mutsMut = other.mutsMut;
- *   cv = other.cv;
- */
+//	mutexes can't be copied
 	return *this;
 }
 
@@ -51,8 +45,8 @@ void Barrier::lockOrNotify() {
     locked = true;
 	for(int i = 0; i < numMuts; i++) {
 		if(muts[i].try_lock()) {
-            fprintf(stderr, "got a lock %d\n", i);
 			mutsMut.unlock();
+            // tempMut is required so that a lock can be made, which is needed to use the condition variable
 			std::mutex tempMut;
 			std::unique_lock<std::mutex> tempLock(tempMut);
 			cv.wait(tempLock, [this]{return !this->locked;});
@@ -61,7 +55,6 @@ void Barrier::lockOrNotify() {
 			return;
 		}
 	}
-    fprintf(stderr, "notifying\n");
     locked = false;
 	cv.notify_all();
     std::this_thread::sleep_for(std::chrono::milliseconds(10));

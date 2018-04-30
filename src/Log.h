@@ -1,6 +1,8 @@
 #ifndef LOG_H
 #define LOG_H
 
+// Handles all of the output from this program. Ensures thread safe printing.
+
 #include <mutex>
 #include "Ticket.h"
 #include "Customer.h"
