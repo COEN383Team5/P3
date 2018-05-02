@@ -24,13 +24,10 @@ public:
 
 	/* This is a blocking call that locks one of the muts
 	 * if all the muts are locked, then it notifies all those
-	 * waiting
+	 * waiting. It will not allow a thread to wait longer than
+     * 1 millisecond
 	 */
 	void lockOrNotify();
-
-    /* This function notifies all the threads that are waiting
-     */
-    void notify();
 };
 
 #endif

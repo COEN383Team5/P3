@@ -62,7 +62,3 @@ void Barrier::lockOrNotify() {
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	mutsMut.unlock();
 }
-
-void Barrier::notify() {
-    cv.notify_all();
-}

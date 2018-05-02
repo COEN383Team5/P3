@@ -1,0 +1,36 @@
+The software design is as follows:
+    1. Sellers are generated as described in the project description
+    2. The time that customers arrive is generated when the sellers are made
+    3. Sellers have a queue that customers enter when they arrive
+    4. Sellers have access to all the tickets, but a ticket will not allow
+    itself to be sold multiple times
+    5. The seller trys to sell their next ticket. If it fails, the seller
+    attempts to sell the next ticket after that. The process continues until
+    the seller has sold a ticket, or has attempted to sell all of the tickets.
+    6. When a ticket is sold, it logs who it was sold to and when it was
+    sold and does not allow itself to be sold again.
+    7. A barrier is used to ensure that one seller does not progress to the
+    next minute before the rest of the sellers. This ensures fairness to
+    customers.
+    8. Logging of information is in a critical section to prevent the sale of
+    one ticket from being intertwined with the sale of another in the messages
+    that are printed.
+    9. When there are no more available tickets, or there is no more time to
+    sell the seller will turn away customers. 
+
+To run realistically, I modified the amount of time the last seller of a
+specific minute sleeps before continuing. This was required as the seller
+needed to yield so that the other sellers could be notified so that they could
+run for the minute. Without sleeping, the last seller could run multiple
+minutes and notify multiple times before other sellers got a turn to run.
+
+The data that was shared between sellers were the tickets. The critical
+regions were as follows:
+    1. Ticket::sellTicket(3), which is when a ticket is actually sold.
+    2. Log::printTickets(1), Log::logEntry(2), Log::logExit(2), and
+    Log::logSale(3) are the critical sections for printing information to
+    stdout.
+    3. Barrier::lockOrNotify() is the critical section that ensures sellers
+    move to the next minute together.
+
+Thread synchronization was achieved through the use of a barrier. 
