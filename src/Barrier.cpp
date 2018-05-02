@@ -1,4 +1,3 @@
-#include <cstdio>
 #include <thread>
 #include <chrono>
 #include "Barrier.h"
@@ -49,14 +48,21 @@ void Barrier::lockOrNotify() {
             // tempMut is required so that a lock can be made, which is needed to use the condition variable
 			std::mutex tempMut;
 			std::unique_lock<std::mutex> tempLock(tempMut);
-			cv.wait(tempLock, [this]{return !this->locked;});
+			cv.wait_for(tempLock, std::chrono::milliseconds(500), [this]{return !this->locked;});
             muts[i].unlock();
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			return;
 		}
 	}
     locked = false;
 	cv.notify_all();
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    // this sleep is required so that this thread yields, so that the other threads are woken up and are allowed to run
+    // this time was selected though trail and error as this time yeilded the quickest execution
+    // shorter waiting times made the program run slower on the machine I tested on
+    // but it may be system specific
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	mutsMut.unlock();
+}
+
+void Barrier::notify() {
+    cv.notify_all();
 }

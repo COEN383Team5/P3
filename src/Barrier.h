@@ -27,6 +27,10 @@ public:
 	 * waiting
 	 */
 	void lockOrNotify();
+
+    /* This function notifies all the threads that are waiting
+     */
+    void notify();
 };
 
 #endif
